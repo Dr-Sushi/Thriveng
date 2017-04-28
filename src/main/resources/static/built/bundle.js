@@ -80,14 +80,14 @@
 			value: function componentDidMount() {
 				var _this2 = this;
 	
-				client({ method: 'GET', path: '/thriveng-services/events' }).done(function (response) {
-					_this2.setState({ events: response.entity._embedded.employees });
+				client({ method: 'GET', path: '/api/events' }).done(function (response) {
+					_this2.setState({ events: response.entity._embedded.events });
 				});
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				return React.createElement(EmployeeList, { employees: this.state.employees });
+				return React.createElement(EventsList, { events: this.state.events });
 			}
 		}]);
 	
@@ -98,20 +98,20 @@
 	// tag::employee-list[]
 	
 	
-	var EmployeeList = function (_React$Component2) {
-		_inherits(EmployeeList, _React$Component2);
+	var EventsList = function (_React$Component2) {
+		_inherits(EventsList, _React$Component2);
 	
-		function EmployeeList() {
-			_classCallCheck(this, EmployeeList);
+		function EventsList() {
+			_classCallCheck(this, EventsList);
 	
-			return _possibleConstructorReturn(this, (EmployeeList.__proto__ || Object.getPrototypeOf(EmployeeList)).apply(this, arguments));
+			return _possibleConstructorReturn(this, (EventsList.__proto__ || Object.getPrototypeOf(EventsList)).apply(this, arguments));
 		}
 	
-		_createClass(EmployeeList, [{
+		_createClass(EventsList, [{
 			key: 'render',
 			value: function render() {
-				var employees = this.props.employees.map(function (employee) {
-					return React.createElement(Employee, { key: employee._links.self.href, employee: employee });
+				var events = this.props.events.map(function (event) {
+					return React.createElement(Event, { key: event._links.self.href, event: event });
 				});
 				return React.createElement(
 					'table',
@@ -125,42 +125,37 @@
 							React.createElement(
 								'th',
 								null,
-								'First Name'
+								'Event Name'
 							),
 							React.createElement(
 								'th',
 								null,
-								'Last Name'
-							),
-							React.createElement(
-								'th',
-								null,
-								'Description'
+								'Event Date'
 							)
 						),
-						employees
+						events
 					)
 				);
 			}
 		}]);
 	
-		return EmployeeList;
+		return EventsList;
 	}(React.Component);
 	// end::employee-list[]
 	
 	// tag::employee[]
 	
 	
-	var Employee = function (_React$Component3) {
-		_inherits(Employee, _React$Component3);
+	var Event = function (_React$Component3) {
+		_inherits(Event, _React$Component3);
 	
-		function Employee() {
-			_classCallCheck(this, Employee);
+		function Event() {
+			_classCallCheck(this, Event);
 	
-			return _possibleConstructorReturn(this, (Employee.__proto__ || Object.getPrototypeOf(Employee)).apply(this, arguments));
+			return _possibleConstructorReturn(this, (Event.__proto__ || Object.getPrototypeOf(Event)).apply(this, arguments));
 		}
 	
-		_createClass(Employee, [{
+		_createClass(Event, [{
 			key: 'render',
 			value: function render() {
 				return React.createElement(
@@ -169,23 +164,18 @@
 					React.createElement(
 						'td',
 						null,
-						this.props.employee.firstName
+						this.props.event.eventName
 					),
 					React.createElement(
 						'td',
 						null,
-						this.props.employee.lastName
-					),
-					React.createElement(
-						'td',
-						null,
-						this.props.employee.description
+						this.props.event.eventDate
 					)
 				);
 			}
 		}]);
 	
-		return Employee;
+		return Event;
 	}(React.Component);
 	// end::employee[]
 	
@@ -21930,13 +21920,13 @@
 	var rest = __webpack_require__(183);
 	var defaultRequest = __webpack_require__(211);
 	var mime = __webpack_require__(213);
-	var uriTemplateInterceptor = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./api/uriTemplateInterceptor\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-	var errorCode = __webpack_require__(227);
+	var uriTemplateInterceptor = __webpack_require__(227);
+	var errorCode = __webpack_require__(228);
 	var baseRegistry = __webpack_require__(215);
 	
 	var registry = baseRegistry.child();
 	
-	registry.register('text/uri-list', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./api/uriListConverter\""); e.code = 'MODULE_NOT_FOUND'; throw e; }())));
+	registry.register('text/uri-list', __webpack_require__(229));
 	registry.register('application/hal+json', __webpack_require__(216));
 	
 	module.exports = rest.wrap(mime, { registry: registry }).wrap(uriTemplateInterceptor).wrap(errorCode).wrap(defaultRequest, { headers: { 'Accept': 'application/hal+json' } });
@@ -26839,6 +26829,30 @@
 /* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	var __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
+		'use strict';
+	
+		var interceptor = __webpack_require__(212);
+	
+		return interceptor({
+			request: function request(_request /*, config, meta */) {
+				/* If the URI is a URI Template per RFC 6570 (http://tools.ietf.org/html/rfc6570), trim out the template part */
+				if (_request.path.indexOf('{') === -1) {
+					return _request;
+				} else {
+					_request.path = _request.path.split('{')[0];
+					return _request;
+				}
+			}
+		});
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ }),
+/* 228 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*
 	 * Copyright 2012-2013 the original author or authors
 	 * @license MIT, see LICENSE.txt for details
@@ -26887,6 +26901,35 @@
 		// Boilerplate for AMD and Node
 	));
 
+
+/***/ }),
+/* 229 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+		'use strict';
+	
+		/* Convert a single or array of resources into "URI1\nURI2\nURI3..." */
+	
+		return {
+			read: function read(str /*, opts */) {
+				return str.split('\n');
+			},
+			write: function write(obj /*, opts */) {
+				// If this is an Array, extract the self URI and then join using a newline
+				if (obj instanceof Array) {
+					return obj.map(function (resource) {
+						return resource._links.self.href;
+					}).join('\n');
+				} else {
+					// otherwise, just return the self URI
+					return obj._links.self.href;
+				}
+			}
+		};
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ })
 /******/ ]);

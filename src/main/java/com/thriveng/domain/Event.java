@@ -12,10 +12,15 @@ public class Event {
     @Id
     @GeneratedValue
     Long id;
+
     @OneToMany(fetch = FetchType.LAZY)
     List<Task> taskList;
     String eventName;
     Date eventDate;
+
+    private Event() {
+        //default constructor
+    }
 
     public Event(String eventName, Date eventDate) {
         this.eventDate = eventDate;

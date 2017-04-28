@@ -15,34 +15,33 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		client({method: 'GET', path: '/thriveng-services/events'}).done(response => {
-			this.setState({events: response.entity._embedded.employees});
+		client({method: 'GET', path: '/api/events'}).done(response => {
+			this.setState({events: response.entity._embedded.events});
 		});
 	}
 
 	render() {
 		return (
-			<EmployeeList employees={this.state.employees}/>
+			<EventsList events={this.state.events}/>
 		)
 	}
 }
 // end::app[]
 
 // tag::employee-list[]
-class EmployeeList extends React.Component{
+class EventsList extends React.Component{
 	render() {
-		var employees = this.props.employees.map(employee =>
-			<Employee key={employee._links.self.href} employee={employee}/>
+		var events = this.props.events.map(event =>
+			<Event key={event._links.self.href} event={event}/>
 		);
 		return (
 			<table>
 				<tbody>
 					<tr>
-						<th>First Name</th>
-						<th>Last Name</th>
-						<th>Description</th>
+						<th>Event Name</th>
+						<th>Event Date</th>
 					</tr>
-					{employees}
+					{events}
 				</tbody>
 			</table>
 		)
@@ -51,13 +50,12 @@ class EmployeeList extends React.Component{
 // end::employee-list[]
 
 // tag::employee[]
-class Employee extends React.Component{
+class Event extends React.Component{
 	render() {
 		return (
 			<tr>
-				<td>{this.props.employee.firstName}</td>
-				<td>{this.props.employee.lastName}</td>
-				<td>{this.props.employee.description}</td>
+				<td>{this.props.event.eventName}</td>
+				<td>{this.props.event.eventDate}</td>
 			</tr>
 		)
 	}

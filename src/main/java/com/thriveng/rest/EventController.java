@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("thriveng-service")
 public class EventController {
 
-    @RequestMapping(path = "/events", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/events", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
     public List<EventDao> getEvents() {
         EventDao sampleEvent = new EventDao("Allen and Jenny's Wedding", new Date("11/02/2012"));
         List<EventDao> events = new ArrayList<>();
